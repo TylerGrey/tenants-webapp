@@ -67,6 +67,7 @@
     "@apollo/react-hooks": "^3.1.5",
     "@babel/polyfill": "7.4.3",
     "@material-ui/core": "^4.10.0",
+    "@material-ui/icons": "^4.9.1",
     "apollo-boost": "^0.4.9",
     "chalk": "^2.4.2",
     "compression": "1.7.4",

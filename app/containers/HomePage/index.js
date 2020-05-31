@@ -1,36 +1,37 @@
-/*
- * HomePage
- *
- * This is the first thing users see of our App, at the '/' route
- *
- */
-
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
+// import { FormattedMessage } from 'react-intl';
 
-import { useQuery } from '@apollo/react-hooks';
-import { gql } from 'apollo-boost';
+import AppBar from 'components/AppBar';
 
-import messages from './messages';
+// import { useQuery } from '@apollo/react-hooks';
+// import { gql } from 'apollo-boost';
 
-const EXCHANGE_RATES = gql`
-  {
-    ping
-  }
-`;
+// import messages from './messages';
+import Map from '../../components/Map';
+
+// const EXCHANGE_RATES = gql`
+//   {
+//     ping
+//   }
+// `;
 
 export default function HomePage() {
-  const { loading, error, data } = useQuery(EXCHANGE_RATES);
+  // const { loading, error, data } = useQuery(EXCHANGE_RATES);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error :(</p>;
+  // if (loading) return <p>Loading...</p>;
+  // if (error) return <p>Error :(</p>;
 
   return (
     <>
-      <h1>
-        <FormattedMessage {...messages.header} />
-      </h1>
-      {data.ping}
+      <AppBar />
+      <Map />
     </>
+    // <>
+    //   <AppBar />
+    //   <h1>
+    //     <FormattedMessage {...messages.header} />
+    //   </h1>
+    //   {data.ping}
+    // </>
   );
 }
