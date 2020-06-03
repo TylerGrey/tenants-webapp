@@ -1,37 +1,14 @@
 import React from 'react';
-// import { FormattedMessage } from 'react-intl';
+import { Box } from '@material-ui/core';
 
 import AppBar from 'components/AppBar';
-
-// import { useQuery } from '@apollo/react-hooks';
-// import { gql } from 'apollo-boost';
-
-// import messages from './messages';
-import Map from '../../components/Map';
-
-// const EXCHANGE_RATES = gql`
-//   {
-//     ping
-//   }
-// `;
+import MapContent from './MapContent';
 
 export default function HomePage() {
-  // const { loading, error, data } = useQuery(EXCHANGE_RATES);
-
-  // if (loading) return <p>Loading...</p>;
-  // if (error) return <p>Error :(</p>;
-
   return (
-    <>
+    <Box height="100vh">
       <AppBar />
-      <Map />
-    </>
-    // <>
-    //   <AppBar />
-    //   <h1>
-    //     <FormattedMessage {...messages.header} />
-    //   </h1>
-    //   {data.ping}
-    // </>
+      <MapContent />
+    </Box>
   );
 }

@@ -1,14 +1,15 @@
 /* global kakao */
-import React, { useEffect } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-const MapContents = styled.div`
+const MapDiv = styled.div`
   width: 100%;
-  height: 950px;
+  height: 100%;
 `;
 
-export default function Map() {
-  useEffect(() => {
+class Map extends Component {
+  componentDidMount() {
     const script = document.createElement('script');
     script.async = true;
     script.src =
@@ -17,14 +18,52 @@ export default function Map() {
 
     script.onload = () => {
       kakao.maps.load(() => {
+        const { lat, lng, markers, onDragged } = this.props;
         const mapArea = document.getElementById('kakaoMap');
-        // eslint-disable-next-line no-unused-vars
-        const map = new kakao.maps.Map(mapArea, {
-          center: new kakao.maps.Coords(523951.25, 1085073.75),
+
+        this.map = new kakao.maps.Map(mapArea, {
+          center: new kakao.maps.LatLng(lat, lng),
         });
+
+        if (markers) {
+          this.updateMarkers(markers);
+        }
+
+        if (onDragged) {
+          kakao.maps.event.addListener(this.map, 'dragend', () =>
+            onDragged(this.map.getCenter()),
+          );
+        }
       });
     };
-  });
+  }
 
-  return <MapContents id="kakaoMap" />;
+  componentWillReceiveProps(props) {
+    if (props.markers) {
+      this.updateMarkers(props.markers);
+    }
+  }
+
+  updateMarkers = markers => {
+    markers.forEach(marker => {
+      marker.setMap(this.map);
+    });
+  };
+
+  render() {
+    return (
+      <>
+        <MapDiv id="kakaoMap" />
+      </>
+    );
+  }
 }
+
+Map.propTypes = {
+  lat: PropTypes.number,
+  lng: PropTypes.number,
+  markers: PropTypes.array,
+  onDragged: PropTypes.func,
+};
+
+export default Map;
