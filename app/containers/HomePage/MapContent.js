@@ -1,5 +1,6 @@
 /* global kakao */
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import Map from 'components/Map';
@@ -20,18 +21,20 @@ const GET_BUILDINGS = gql`
 `;
 
 const Wrapper = styled.div`
-  width: '100%';
+  width: 100%;
   height: calc(100vh - 64px);
 `;
 
-export default function MapContent() {
-  const [lat, setLat] = useState(37.477117);
-  const [lng, setLng] = useState(126.9612293);
+export default function MapContent({ onClickMarker }) {
+  const [position, setPosition] = useState({
+    lat: 37.477117,
+    lng: 126.9612293,
+  });
 
   const { loading, error, data } = useQuery(GET_BUILDINGS, {
     variables: {
-      lat,
-      lng,
+      lat: position.lat,
+      lng: position.lng,
       scale: 1,
     },
   });
@@ -41,22 +44,38 @@ export default function MapContent() {
     data.bldgs.forEach(bldg => {
       const markerPosition = new kakao.maps.LatLng(bldg.lat, bldg.lng);
 
-      markers.push(
-        new kakao.maps.Marker({
-          position: markerPosition,
-        }),
-      );
+      const marker = new kakao.maps.Marker({
+        position: markerPosition,
+      });
+
+      kakao.maps.event.addListener(marker, 'click', () => {
+        onClickMarker(bldg.id);
+      });
+
+      markers.push(marker);
     });
   }
 
   const onDraggedMap = center => {
-    setLat(center.Ha);
-    setLng(center.Ga);
+    setPosition({
+      lat: center.Ha,
+      lng: center.Ga,
+    });
   };
 
   return (
     <Wrapper>
-      <Map lat={lat} lng={lng} onDragged={onDraggedMap} markers={markers} />
+      <Map
+        lat={position.lat}
+        lng={position.lng}
+        markers={markers}
+        onDragged={onDraggedMap}
+        onClickMarker={onClickMarker}
+      />
     </Wrapper>
   );
 }
+
+MapContent.propTypes = {
+  onClickMarker: PropTypes.func,
+};

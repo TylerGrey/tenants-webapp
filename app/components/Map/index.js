@@ -10,32 +10,22 @@ const MapDiv = styled.div`
 
 class Map extends Component {
   componentDidMount() {
-    const script = document.createElement('script');
-    script.async = true;
-    script.src =
-      'https://dapi.kakao.com/v2/maps/sdk.js?appkey=9b15b62a8e0278cd9ec754ea4c73da5a&autoload=false';
-    document.head.appendChild(script);
+    const { lat, lng, markers, onDragged } = this.props;
+    const mapArea = document.getElementById('kakaoMap');
 
-    script.onload = () => {
-      kakao.maps.load(() => {
-        const { lat, lng, markers, onDragged } = this.props;
-        const mapArea = document.getElementById('kakaoMap');
+    this.map = new kakao.maps.Map(mapArea, {
+      center: new kakao.maps.LatLng(lat, lng),
+    });
 
-        this.map = new kakao.maps.Map(mapArea, {
-          center: new kakao.maps.LatLng(lat, lng),
-        });
+    if (markers) {
+      this.updateMarkers(markers);
+    }
 
-        if (markers) {
-          this.updateMarkers(markers);
-        }
-
-        if (onDragged) {
-          kakao.maps.event.addListener(this.map, 'dragend', () =>
-            onDragged(this.map.getCenter()),
-          );
-        }
-      });
-    };
+    if (onDragged) {
+      kakao.maps.event.addListener(this.map, 'dragend', () =>
+        onDragged(this.map.getCenter()),
+      );
+    }
   }
 
   componentWillReceiveProps(props) {
