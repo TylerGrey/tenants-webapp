@@ -13,7 +13,7 @@ const Contents = styled.div`
 `;
 
 export default function HomePage() {
-  const [bldgID, setBldgID] = useState();
+  const [bldgId, setBldgId] = useState('');
 
   return (
     <Box height="100vh">
@@ -21,10 +21,10 @@ export default function HomePage() {
       <Contents>
         <Grid container>
           <Grid item xs={7}>
-            <MapContent onClickMarker={setBldgID} />
+            <MapContent onClickMarker={setBldgId} />
           </Grid>
           <Grid item xs={5}>
-            <ReviewContent bldgID={bldgID} />
+            <ReviewContent bldgId={bldgId} />
           </Grid>
         </Grid>
       </Contents>
