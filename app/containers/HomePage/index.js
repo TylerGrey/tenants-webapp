@@ -6,6 +6,7 @@ import { Box, Grid } from '@material-ui/core';
 import AppBar from 'components/AppBar';
 import MapContent from './MapContent';
 import ReviewContent from './ReviewContent';
+import SearchContent from './SearchContent';
 
 const Contents = styled.div`
   width: 100%;
@@ -19,11 +20,12 @@ export default function HomePage() {
     <Box height="100vh">
       <AppBar />
       <Contents>
+        <SearchContent />
         <Grid container>
-          <Grid item xs={7}>
+          <Grid item xs={9}>
             <MapContent onClickMarker={setBldgId} />
           </Grid>
-          <Grid item xs={5}>
+          <Grid item xs={3}>
             <ReviewContent bldgId={bldgId} />
           </Grid>
         </Grid>
