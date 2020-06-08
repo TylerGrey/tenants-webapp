@@ -10,11 +10,11 @@ const MapDiv = styled.div`
 
 class Map extends Component {
   componentDidMount() {
-    const { lat, lng, markers, onDragged } = this.props;
+    const { center, markers, onDragged } = this.props;
     const mapArea = document.getElementById('kakaoMap');
 
     this.map = new kakao.maps.Map(mapArea, {
-      center: new kakao.maps.LatLng(lat, lng),
+      center: new kakao.maps.LatLng(center.lat, center.lng),
     });
 
     if (markers) {
@@ -28,9 +28,18 @@ class Map extends Component {
     }
   }
 
-  componentWillReceiveProps(props) {
-    if (props.markers) {
-      this.updateMarkers(props.markers);
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.markers) {
+      this.updateMarkers(nextProps.markers);
+    }
+
+    if (
+      nextProps.center.lat !== this.props.center.lat &&
+      nextProps.center.lng !== this.props.center.lng
+    ) {
+      this.map.setCenter(
+        new kakao.maps.LatLng(nextProps.center.lat, nextProps.center.lng),
+      );
     }
   }
 
@@ -50,8 +59,7 @@ class Map extends Component {
 }
 
 Map.propTypes = {
-  lat: PropTypes.number,
-  lng: PropTypes.number,
+  center: PropTypes.object,
   markers: PropTypes.array,
   onDragged: PropTypes.func,
 };

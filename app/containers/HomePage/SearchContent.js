@@ -1,4 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import { createStructuredSelector } from 'reselect';
+
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import InputBase from '@material-ui/core/InputBase';
@@ -8,6 +13,8 @@ import SearchIcon from '@material-ui/icons/Search';
 
 import { useLazyQuery } from '@apollo/react-hooks';
 import { SEARCH } from './query';
+
+import { setMapCenter } from './actions';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -38,7 +45,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function SearchContent() {
+export function SearchContent({ onClickSearchItem }) {
   const classes = useStyles();
 
   const [query, setQuery] = useState('');
@@ -68,12 +75,21 @@ export default function SearchContent() {
             }
           />
         </div>
-        <Divider className={classes.divider} orientation="horizontal" />
+        {list && (
+          <Divider className={classes.divider} orientation="horizontal" />
+        )}
         {list && (
           <div className={classes.list}>
             {list.map(item => (
               <div>
-                <p>{item.name}</p>
+                <button
+                  type="button"
+                  onClick={() =>
+                    onClickSearchItem({ lat: item.lat, lng: item.lng })
+                  }
+                >
+                  {item.name}
+                </button>
                 <p>
                   ({item.zoneNo}) {item.roadAddress}
                 </p>
@@ -87,3 +103,23 @@ export default function SearchContent() {
     </div>
   );
 }
+
+SearchContent.propTypes = {
+  onClickSearchItem: PropTypes.func,
+};
+
+export function mapDispatchToProps(dispatch) {
+  return {
+    onClickSearchItem: center => dispatch(setMapCenter(center)),
+  };
+}
+
+const withConnect = connect(
+  null,
+  mapDispatchToProps,
+);
+
+export default compose(
+  withConnect,
+  memo,
+)(SearchContent);

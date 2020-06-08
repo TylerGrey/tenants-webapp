@@ -1,12 +1,20 @@
 /* global kakao */
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import { createStructuredSelector } from 'reselect';
 
+import { useInjectReducer } from 'utils/injectReducer';
+
+import styled from 'styled-components';
 import Map from 'components/Map';
 
 import { useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
+
+import { makeSelectCenter } from './selectors';
+import reducer from './reducer';
 
 const GET_BUILDINGS = gql`
   query Bldgs($lat: Float!, $lng: Float!, $scale: Int!) {
@@ -25,7 +33,11 @@ const Wrapper = styled.div`
   height: calc(100vh - 64px);
 `;
 
-export default function MapContent({ onClickMarker }) {
+const key = 'home';
+
+export function MapContent({ center, onClickMarker }) {
+  useInjectReducer({ key, reducer });
+
   const [position, setPosition] = useState({
     lat: 37.477117,
     lng: 126.9612293,
@@ -66,8 +78,7 @@ export default function MapContent({ onClickMarker }) {
   return (
     <Wrapper>
       <Map
-        lat={position.lat}
-        lng={position.lng}
+        center={center}
         markers={markers}
         onDragged={onDraggedMap}
         onClickMarker={onClickMarker}
@@ -77,5 +88,20 @@ export default function MapContent({ onClickMarker }) {
 }
 
 MapContent.propTypes = {
+  center: PropTypes.object,
   onClickMarker: PropTypes.func,
 };
+
+const mapStateToProps = createStructuredSelector({
+  center: makeSelectCenter(),
+});
+
+const withConnect = connect(
+  mapStateToProps,
+  null,
+);
+
+export default compose(
+  withConnect,
+  memo,
+)(MapContent);

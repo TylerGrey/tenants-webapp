@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
 
 import { Box, Grid } from '@material-ui/core';
@@ -18,6 +19,10 @@ export default function HomePage() {
 
   return (
     <Box height="100vh">
+      <Helmet>
+        <title>Tenants</title>
+        <meta name="description" content="세입자들 메인 페이지" />
+      </Helmet>
       <AppBar />
       <Contents>
         <SearchContent />
