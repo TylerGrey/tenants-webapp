@@ -34,26 +34,26 @@ const Wrapper = styled.div`
 `;
 
 const key = 'home';
+let bldgs = [];
 
 export function MapContent({ center, onClickMarker }) {
   useInjectReducer({ key, reducer });
 
-  const [position, setPosition] = useState({
-    lat: 37.477117,
-    lng: 126.9612293,
-  });
-
-  const { loading, error, data } = useQuery(GET_BUILDINGS, {
+  const { loading, error, data, refetch } = useQuery(GET_BUILDINGS, {
     variables: {
-      lat: position.lat,
-      lng: position.lng,
+      lat: center.lat,
+      lng: center.lng,
       scale: 1,
     },
   });
 
   const markers = [];
   if (data && data.bldgs) {
-    data.bldgs.forEach(bldg => {
+    const bldgIds = bldgs.map(b => b.id);
+    const newBldgs = data.bldgs.filter(b => bldgIds.indexOf(b.id) < 0);
+    bldgs = [...bldgs, ...newBldgs];
+
+    newBldgs.forEach(bldg => {
       const markerPosition = new kakao.maps.LatLng(bldg.lat, bldg.lng);
 
       const marker = new kakao.maps.Marker({
@@ -68,10 +68,10 @@ export function MapContent({ center, onClickMarker }) {
     });
   }
 
-  const onDraggedMap = center => {
-    setPosition({
-      lat: center.Ha,
-      lng: center.Ga,
+  const onDraggedMap = nextCenter => {
+    refetch({
+      lat: nextCenter.Ha,
+      lng: nextCenter.Ga,
     });
   };
 

@@ -41,7 +41,11 @@ const GET_REVIEWS = gql`
 `;
 
 const Wrapper = styled.div`
-  width: 100%;
+  position: absolute;
+  right: 0;
+  z-index: 1000;
+  background: white;
+  width: 350px;
   height: calc(100vh - 64px);
   overflow-y: scroll;
 `;

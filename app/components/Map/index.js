@@ -17,6 +17,12 @@ class Map extends Component {
       center: new kakao.maps.LatLng(center.lat, center.lng),
     });
 
+    this.clusterer = new kakao.maps.MarkerClusterer({
+      map: this.map,
+      averageCenter: true,
+      minLevel: 5,
+    });
+
     if (markers) {
       this.updateMarkers(markers);
     }
@@ -44,9 +50,7 @@ class Map extends Component {
   }
 
   updateMarkers = markers => {
-    markers.forEach(marker => {
-      marker.setMap(this.map);
-    });
+    this.clusterer.addMarkers(markers);
   };
 
   render() {

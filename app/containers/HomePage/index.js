@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
 
-import { Box, Grid } from '@material-ui/core';
+import { Box } from '@material-ui/core';
 
 import AppBar from 'components/AppBar';
 import MapContent from './MapContent';
@@ -15,7 +15,7 @@ const Contents = styled.div`
 `;
 
 export default function HomePage() {
-  const [bldgId, setBldgId] = useState('');
+  // const [bldgId, setBldgId] = useState('');
 
   return (
     <Box height="100vh">
@@ -26,14 +26,8 @@ export default function HomePage() {
       <AppBar />
       <Contents>
         <SearchContent />
-        <Grid container>
-          <Grid item xs={9}>
-            <MapContent onClickMarker={setBldgId} />
-          </Grid>
-          <Grid item xs={3}>
-            <ReviewContent bldgId={bldgId} />
-          </Grid>
-        </Grid>
+        {/* <ReviewContent /> */}
+        <MapContent />
       </Contents>
     </Box>
   );
