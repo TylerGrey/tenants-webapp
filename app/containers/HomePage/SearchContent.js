@@ -2,7 +2,6 @@ import React, { useState, memo } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { createStructuredSelector } from 'reselect';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
@@ -80,20 +79,18 @@ export function SearchContent({ onClickSearchItem }) {
         )}
         {list && (
           <div className={classes.list}>
-            {list.map(item => (
+            {list.map(searchItem => (
               <div>
                 <button
                   type="button"
-                  onClick={() =>
-                    onClickSearchItem({ lat: item.lat, lng: item.lng })
-                  }
+                  onClick={() => onClickSearchItem(searchItem)}
                 >
-                  {item.name}
+                  {searchItem.name}
                 </button>
                 <p>
-                  ({item.zoneNo}) {item.roadAddress}
+                  ({searchItem.zoneNo}) {searchItem.roadAddress}
                 </p>
-                <p>{item.address}</p>
+                <p>{searchItem.address}</p>
                 <Divider className={classes.divider} orientation="horizontal" />
               </div>
             ))}
@@ -110,7 +107,7 @@ SearchContent.propTypes = {
 
 export function mapDispatchToProps(dispatch) {
   return {
-    onClickSearchItem: center => dispatch(setMapCenter(center)),
+    onClickSearchItem: searchItem => dispatch(setMapCenter(searchItem)),
   };
 }
 

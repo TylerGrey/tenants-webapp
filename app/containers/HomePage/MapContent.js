@@ -1,5 +1,5 @@
 /* global kakao */
-import React, { useState, memo } from 'react';
+import React, { memo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -15,6 +15,7 @@ import { gql } from 'apollo-boost';
 
 import { makeSelectCenter } from './selectors';
 import reducer from './reducer';
+import { setSelectedBldg } from './actions';
 
 const GET_BUILDINGS = gql`
   query Bldgs($lat: Float!, $lng: Float!, $scale: Int!) {
@@ -43,7 +44,7 @@ export function MapContent({ center, onClickMarker }) {
     variables: {
       lat: center.lat,
       lng: center.lng,
-      scale: 1,
+      scale: 3,
     },
   });
 
@@ -61,28 +62,24 @@ export function MapContent({ center, onClickMarker }) {
       });
 
       kakao.maps.event.addListener(marker, 'click', () => {
-        onClickMarker(bldg.id);
+        onClickMarker(bldg);
       });
 
       markers.push(marker);
     });
   }
 
-  const onDraggedMap = nextCenter => {
+  const onDraggedMap = (nextCenter, nextLevel) => {
     refetch({
       lat: nextCenter.Ha,
       lng: nextCenter.Ga,
+      scale: nextLevel,
     });
   };
 
   return (
     <Wrapper>
-      <Map
-        center={center}
-        markers={markers}
-        onDragged={onDraggedMap}
-        onClickMarker={onClickMarker}
-      />
+      <Map center={center} markers={markers} onDragged={onDraggedMap} />
     </Wrapper>
   );
 }
@@ -96,9 +93,15 @@ const mapStateToProps = createStructuredSelector({
   center: makeSelectCenter(),
 });
 
+export function mapDispatchToProps(dispatch) {
+  return {
+    onClickMarker: bldg => dispatch(setSelectedBldg(bldg)),
+  };
+}
+
 const withConnect = connect(
   mapStateToProps,
-  null,
+  mapDispatchToProps,
 );
 
 export default compose(

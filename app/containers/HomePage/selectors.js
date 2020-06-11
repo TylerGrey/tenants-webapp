@@ -13,4 +13,10 @@ const makeSelectCenter = () =>
     homeState => homeState.center,
   );
 
-export { selectHome, makeSelectCenter };
+const makeSelectSelectedBldg = () =>
+  createSelector(
+    selectHome,
+    homeState => homeState.selectedBldg,
+  );
+
+export { selectHome, makeSelectCenter, makeSelectSelectedBldg };

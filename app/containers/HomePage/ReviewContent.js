@@ -50,12 +50,12 @@ const Wrapper = styled.div`
   overflow-y: scroll;
 `;
 
-export default function ReviewContent({ bldgId }) {
+export default function ReviewContent({ bldg }) {
   let reviews = [];
 
   const { loading, error, data } = useQuery(GET_REVIEWS, {
     variables: {
-      bldgId,
+      bldgId: bldg.id,
       first: 10,
     },
   });
@@ -81,5 +81,5 @@ export default function ReviewContent({ bldgId }) {
 }
 
 ReviewContent.propTypes = {
-  bldgId: PropTypes.string,
+  bldg: PropTypes.object,
 };

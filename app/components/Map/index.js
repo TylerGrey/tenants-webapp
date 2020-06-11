@@ -29,7 +29,7 @@ class Map extends Component {
 
     if (onDragged) {
       kakao.maps.event.addListener(this.map, 'dragend', () =>
-        onDragged(this.map.getCenter()),
+        onDragged(this.map.getCenter(), this.map.getLevel()),
       );
     }
   }
