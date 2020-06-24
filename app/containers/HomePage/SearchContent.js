@@ -66,7 +66,7 @@ export function SearchContent({ onClickSearchItem }) {
           </IconButton>
           <InputBase
             className={classes.input}
-            placeholder="주소 검색"
+            placeholder="도로명 검색"
             value={query}
             onChange={event => setQuery(event.target.value)}
             onKeyUp={event =>
